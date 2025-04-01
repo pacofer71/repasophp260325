@@ -20,9 +20,13 @@ class Categoria extends Conexion{
         }     
     }
 
-    public static function read(): array{
-        $q="select * from categorias order by id desc";
-        $stmt=self::executeQuery(query: $q, flag:true);
+    public static function read(?int $id=null): array{
+        $q=(is_null($id)) ? "select * from categorias order by id desc" : "select * from categorias where id=:i" ;
+        $parametros= (is_null($id)) ? [] : [':i'=>$id];
+        $stmt=self::executeQuery(
+            query: $q, 
+            parametros:$parametros,
+            flag:true);
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
     public function create(){
@@ -33,6 +37,10 @@ class Categoria extends Conexion{
     public static function delete(int $id){
         $q="delete from categorias where id=:i";
         self::executeQuery($q, [':i'=>$id]);
+    }
+    public function update(int $id){
+        $q="update categorias set nombre=:n where id=:i";
+        self::executeQuery($q, [':n'=>$this->nombre, ':i'=>$id]);
     }
 
     public static function isNombreUnico(string $nombre): bool{

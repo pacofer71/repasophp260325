@@ -1,0 +1,82 @@
+<?php
+namespace App\Db;
+use \PDO;
+use \PDOException;
+use \PDOStatement;
+
+class Producto extends Conexion{
+    private int $id;
+    private string $nombre;
+    private string $descripcion;
+    private string $imagen;
+    private int $categoria_id;
+    
+
+    private static function executeQuery(string $query, array $parametros=[], bool $flag=false): ?PDOStatement {
+        $stmt=parent::getConexion()->prepare($query);
+        try{
+            (count($parametros)) ? $stmt->execute($parametros) : $stmt->execute() ;
+            return ($flag) ? $stmt : null;
+        }catch(PDOException $ex){
+            throw new PDOException("Error: ".$ex->getMessage());
+        }finally{
+            parent::cerrarConexion();
+        }
+    }
+    public static function read(): array{
+        $q="select productos.*, categorias.nombre as nomcat from productos, categorias
+        where categoria_id=categorias.id order by nomcat, productos.nombre";
+        $stmt=self::executeQuery($q, [], true);
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
+
+    /**
+     * Set the value of id
+     */
+    public function setId(int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Set the value of nombre
+     */
+    public function setNombre(string $nombre): self
+    {
+        $this->nombre = $nombre;
+
+        return $this;
+    }
+
+    /**
+     * Set the value of descripcion
+     */
+    public function setDescripcion(string $descripcion): self
+    {
+        $this->descripcion = $descripcion;
+
+        return $this;
+    }
+
+    /**
+     * Set the value of imagen
+     */
+    public function setImagen(string $imagen): self
+    {
+        $this->imagen = $imagen;
+
+        return $this;
+    }
+
+    /**
+     * Set the value of categoria_id
+     */
+    public function setCategoriaId(int $categoria_id): self
+    {
+        $this->categoria_id = $categoria_id;
+
+        return $this;
+    }
+}

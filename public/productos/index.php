@@ -1,11 +1,10 @@
 <?php
+
+use App\Db\Producto;
+
 session_start();
-
-use App\Db\Categoria;
-
 require __DIR__ . "/../../vendor/autoload.php";
-$categorias = Categoria::read();
-
+$productos=Producto::read();
 
 ?>
 <!DOCTYPE html>
@@ -20,25 +19,35 @@ $categorias = Categoria::read();
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!--CDN Fontawesome-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <title>Categorias</title>
+    <title>Productos</title>
 </head>
 
 <body class="bg-slate-200">
-    <h3 class="my-2 text-2xl text-center">Listado de Categorías</h3>
+    <h3 class="my-2 text-2xl text-center">Listado de Productos</h3>
     <div class="w-1/2 mx-auto">
         <div class="flex flex-row-reverse mb-2">
             <a href="nuevo.php" class="p-2 rounded-lg bg-blue-400 hover:bg-blue-600 text-white font-bold upper">
-                <i class="fas fa-add mr-2"></i>NUEVA
+                <i class="fas fa-add mr-2"></i>NUEVO
             </a>
         </div>
+        <!-- tabla con los productos -->
+
+
+
         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
-                    <th scope="col" class="px-6 py-3">
-                        ID
+                    <th scope="col" class="px-16 py-3">
+                        <span class="sr-only">Image</span>
                     </th>
                     <th scope="col" class="px-6 py-3">
                         NOMBRE
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        DESCRIPCION
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        CATEGORIA
                     </th>
                     <th scope="col" class="px-6 py-3">
                         ACCIONES
@@ -46,29 +55,30 @@ $categorias = Categoria::read();
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($categorias as $item): ?>
-                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                            <?= $item->id ?>
-                        </th>
-                        <td class="px-6 py-4">
-                            <?= $item->nombre ?>
-                        </td>
-                        <td class="px-6 py-4">
-                            <form action="borrar.php" method="POST">
-                                <input type="hidden" name="cat_id" value="<?= $item->id ?>" />
-                                <a href="update.php?id=<?= $item->id ?>" class="mr-2">
-                                    <i class="fas fa-edit text-lg hover:text-2xl"></i>
-                                </a>
-                                <button type="submit">
-                                    <i class="fas fa-trash text-lg hover:text-2xl"></i>
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
+                <?php foreach($productos as $item): ?>
+                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+                    <td class="p-4">
+                        <img src="../<?= $item->imagen ?>" class="w-16 md:w-32 max-w-full max-h-full" alt="<?= $item->nombre; ?>">
+                    </td>
+                    <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white">
+                        <?= $item->nombre ?>
+                    </td>
+                    <td class="px-6 py-4">
+                        <?=$item->descripcion ?>
+                    </td>
+                    <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white">
+                        <?= $item->nomcat ?>
+                    </td>
+                    <td class="px-6 py-4">
+                        <a href="#" class="font-medium text-red-600 dark:text-red-500 hover:underline">Remove</a>
+                    </td>
+                </tr>
                 <?php endforeach; ?>
+               
             </tbody>
         </table>
+
+
     </div>
     <?php if (isset($_SESSION['mensaje'])): ?>
         <script>
