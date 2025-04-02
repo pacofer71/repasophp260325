@@ -13,7 +13,7 @@ use App\Utils\Validaciones;
             $errores=true;
         }else{
             //longitud valida comprobare si el campo está duplicado
-            if(!Validaciones::isCampoUnico($nombre)){
+            if(!Validaciones::isCampoUnico($nombre, Categoria::class)){
                 $errores=true;
             }
         }

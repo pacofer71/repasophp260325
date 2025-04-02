@@ -1,7 +1,7 @@
 <?php
 namespace App\Utils;
 
-use App\Db\Categoria;
+use App\Db\{Categoria,Producto};
 
 class Validaciones{
     public static function sanearCadena(string $cad): string{
@@ -16,9 +16,38 @@ class Validaciones{
         return true;
     }
 
-    public static function isCampoUnico($valor): bool{
-        if(!Categoria::isNombreUnico($valor)){
+    public static function isCampoUnico(string $valor, string $nomClase): bool{
+        if(!$nomClase::isNombreUnico($valor)){
             $_SESSION['err_nombre']="*** Error el nombre ya existe en la base de datos";
+            return false;
+        }
+        return true;
+    }
+   
+
+    public static function existeCategoria(int $id){
+        if(count(Categoria::read($id))==0){
+            $_SESSION['err_categoria']="*** Error la categoria no existe o no seleccionaste ninguna";
+            return false;
+        }
+        return true;
+    }
+
+    public static function isImagenValida(string $tipo, int $size){
+        $imageMimeTypes = [
+            'image/jpeg',    // JPEG
+            'image/png',     // PNG
+            'image/gif',     // GIF
+            'image/bmp',     // BMP
+            'image/webp',    // WebP
+            'image/svg+xml', // SVG
+            'image/tiff',    // TIFF
+            'image/heif',    // HEIF
+            'image/heic',    // HEIC
+            'image/x-icon'   // ICO
+        ];
+        if(!in_array($tipo, $imageMimeTypes) || $size>2_097_152){
+            $_SESSION['err_imagen']="*** Error o no es un fichero de imagen o excede los 2MB";
             return false;
         }
         return true;

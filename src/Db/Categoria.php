@@ -29,6 +29,7 @@ class Categoria extends Conexion{
             flag:true);
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
+    
     public function create(){
         $q="insert into categorias(nombre) values(:n)";
         self::executeQuery($q, [':n'=>$this->nombre]);

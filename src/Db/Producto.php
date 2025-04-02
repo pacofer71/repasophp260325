@@ -23,11 +23,26 @@ class Producto extends Conexion{
             parent::cerrarConexion();
         }
     }
+
+    public function create(){
+        $q="insert into productos(nombre, descripcion, categoria_id, imagen) values(:n, :d, :ci, :im)";
+        $atributos=[':n'=>$this->nombre, ':d'=>$this->descripcion, ':ci'=>$this->categoria_id, ':im'=>$this->imagen];
+        self::executeQuery($q, $atributos, false);
+    }
+
     public static function read(): array{
         $q="select productos.*, categorias.nombre as nomcat from productos, categorias
         where categoria_id=categorias.id order by nomcat, productos.nombre";
         $stmt=self::executeQuery($q, [], true);
         return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
+
+    public static function isNombreUnico(string $nombre): bool{
+        $q="select id from productos where nombre=:n";
+        $stmt=self::executeQuery($q, [':n'=>$nombre], true);
+        //var_dump( $stmt->fetch(PDO::FETCH_OBJ));
+        //die();
+        return $stmt->fetch(PDO::FETCH_OBJ) ? false : true;
     }
 
     /**
@@ -63,9 +78,9 @@ class Producto extends Conexion{
     /**
      * Set the value of imagen
      */
-    public function setImagen(string $imagen): self
+    public function setImagen(?string $imagen=null): self
     {
-        $this->imagen = $imagen;
+        $this->imagen = (is_null($imagen)) ? "img/default.png" :$imagen;
 
         return $this;
     }
