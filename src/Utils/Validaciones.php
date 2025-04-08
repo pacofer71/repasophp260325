@@ -16,8 +16,8 @@ class Validaciones{
         return true;
     }
 
-    public static function isCampoUnico(string $valor, string $nomClase): bool{
-        if(!$nomClase::isNombreUnico($valor)){
+    public static function isCampoUnico(string $valor, string $nomClase, ?int $id=null): bool{
+        if(!$nomClase::isNombreUnico($valor, $id)){
             $_SESSION['err_nombre']="*** Error el nombre ya existe en la base de datos";
             return false;
         }

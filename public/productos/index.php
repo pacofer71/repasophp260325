@@ -4,7 +4,7 @@ use App\Db\Producto;
 
 session_start();
 require __DIR__ . "/../../vendor/autoload.php";
-$productos=Producto::read();
+$productos = Producto::read();
 
 ?>
 <!DOCTYPE html>
@@ -55,26 +55,35 @@ $productos=Producto::read();
                 </tr>
             </thead>
             <tbody>
-                <?php foreach($productos as $item): ?>
-                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-                    <td class="p-4">
-                        <img src="../<?= $item->imagen ?>" class="w-16 md:w-32 max-w-full max-h-full" alt="<?= $item->nombre; ?>">
-                    </td>
-                    <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white">
-                        <?= $item->nombre ?>
-                    </td>
-                    <td class="px-6 py-4">
-                        <?=$item->descripcion ?>
-                    </td>
-                    <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white">
-                        <?= $item->nomcat ?>
-                    </td>
-                    <td class="px-6 py-4">
-                        <a href="#" class="font-medium text-red-600 dark:text-red-500 hover:underline">Remove</a>
-                    </td>
-                </tr>
+                <?php foreach ($productos as $item): ?>
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+                        <td class="p-4">
+                            <img src="../<?= $item->imagen ?>" class="w-16 md:w-32 max-w-full max-h-full" alt="<?= $item->nombre; ?>">
+                        </td>
+                        <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white">
+                            <?= $item->nombre ?>
+                        </td>
+                        <td class="px-6 py-4">
+                            <?= $item->descripcion ?>
+                        </td>
+                        <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white">
+                            <?= $item->nomcat ?>
+                        </td>
+                        <td class="px-6 py-4">
+
+                            <form method="POST" action="borrar.php">
+                                <a href="update.php?pid=<?= $item->id ?>">
+                                    <i class="fas fa-edit text-xl"></i>
+                                </a>
+                                <input type="hidden" name="pid" value="<?= $item->id ?>" />
+                                <button type="submit" onclick="return confirm('¿Borrar Producto?');">
+                                    <i class="fas fa-trash text-xl"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
                 <?php endforeach; ?>
-               
+
             </tbody>
         </table>
 
