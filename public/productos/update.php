@@ -37,6 +37,7 @@ if (isset($_POST['nombre'])) {
             $errores = true;
         }
     }
+    
     if (!Validaciones::longitudCampoValida('descripcion', $descripcion, 5, 150)) {
         $errores = true;
     }
@@ -45,7 +46,7 @@ if (isset($_POST['nombre'])) {
         $errores = true;
     }
     //procesamos la imagen si se ha subido ---------------------------------
-    $imagen = null;
+    $imagen = $producto->imagen;
     if (is_uploaded_file($_FILES['imagen']['tmp_name'])) {
         //hemos subido un fichero, compruebo que sea una imagen y que no exceda 2MB
         if (!Validaciones::isImagenValida($_FILES['imagen']['type'], $_FILES['imagen']['size'])) {
@@ -63,7 +64,7 @@ if (isset($_POST['nombre'])) {
         }
     }
     if ($errores) {
-        header("Location:nuevo.php");
+        header("Location:update.php?pid=$id");
         exit;
     }
     //Si estoy aqui imagen sera null on un valor de imagen valido por ejemplo img/12345_nombre.jpg
@@ -72,8 +73,13 @@ if (isset($_POST['nombre'])) {
         ->setDescripcion($descripcion)
         ->setCategoriaId($categoria)
         ->setImagen($imagen)
-        ->create();
-    $_SESSION['mensaje'] = "Se guardó el producto";
+        ->update($id);
+    //-- Ahora si he modificado la imagen borraré la anigua siempre y cuando NO sea 'default.png'
+    if($imagen!=$producto->imagen && basename($producto->imagen)!='default.png'){
+        unlink("../{$producto->imagen}");
+    }
+
+    $_SESSION['mensaje'] = "Se editó el producto";
     header("Location:index.php");
 }
 

@@ -57,7 +57,7 @@ class Producto extends Conexion
 
     public function update(int $id)
     {
-        $q = "update from productos set nombre=:n, descripcion=:d, categoria_id=:ci, imagen=:im where id=:i";
+        $q = "update productos set nombre=:n, descripcion=:d, categoria_id=:ci, imagen=:im where id=:i";
         $atributos = [
             ':n' => $this->nombre,
             ':d' => $this->descripcion,
@@ -68,11 +68,13 @@ class Producto extends Conexion
         self::executeQuery($q, $atributos, false);
     }
 
-    public static function isNombreUnico(string $nombre, ?int $id=null): bool
+    public static function isNombreUnico(string $nombre, ?int $id = null): bool
     {
-        $q = (is_null($id)) ? "select id from productos where nombre=:n" 
-        : "select id from productos where nombre=:n AND id != :i" ;
-        $parametros= (is_null($id)) ? [':n' => $nombre] :[':n' => $nombre, ':i'=>$id];
+        $q = (is_null($id)) ? "select id from productos where nombre=:n"
+            : "select id from productos where nombre=:n AND id != :i";
+
+        $parametros = (is_null($id)) ? [':n' => $nombre] : [':n' => $nombre, ':i' => $id];
+        
         $stmt = self::executeQuery($q, $parametros, true);
         //var_dump( $stmt->fetch(PDO::FETCH_OBJ));
         //die();
